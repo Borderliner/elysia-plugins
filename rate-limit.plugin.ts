@@ -1,4 +1,4 @@
-import Elysia from 'elysia'
+import { Elysia } from 'elysia'
 import { LRUCache } from 'lru-cache'
 import { loggerPlugin } from './logger.plugin.js'
 

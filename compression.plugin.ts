@@ -1,6 +1,6 @@
 import { Elysia, StatusMap } from 'elysia'
 import { brotliCompressSync, gzipSync, deflateSync } from 'node:zlib'
-import { loggerPlugin } from './logger.plugin'
+import { loggerPlugin } from './logger.plugin.js'
 
 type Scope = 'global' | 'scoped' | 'local'
 
