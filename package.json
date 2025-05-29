@@ -1,24 +1,27 @@
 {
-  "name": "@borderliner/elysia-logger",
-  "version": "1.0.0",
-  "description": "ElysiaJs Logger",
+  "name": "@borderliner/elysia-plugins",
+  "version": "0.1.0",
+  "description": "ElysiaJs Logger, Compression and Rate Limiter plugins that work well together",
   "keywords": [
     "logger",
     "elysia",
-    "plugin"
+    "plugin",
+    "compression",
+    "rate-limit",
+    "rate-limiter"
   ],
-  "homepage": "https://github.com/Borderliner/elysia-logger#readme",
+  "homepage": "https://github.com/Borderliner/elysia-plugins#readme",
   "bugs": {
-    "url": "https://github.com/Borderliner/elysia-logger/issues"
+    "url": "https://github.com/Borderliner/elysia-plugins/issues"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Borderliner/elysia-logger.git"
+    "url": "git+https://github.com/Borderliner/elysia-plugins.git"
   },
   "license": "Apache-2.0",
   "author": "Mohammadreza Hajianpour",
   "type": "module",
-  "main": "dist/index.js",
+  "main": "index.ts",
   "scripts": {
     "compile": "tsc",
     "test": "echo \"Error: no test specified\" && exit 1"
