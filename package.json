@@ -23,6 +23,7 @@
   "type": "module",
   "main": "index.ts",
   "scripts": {
+    "dev:logger": "bun --watch example/index.ts" ,
     "compile": "tsc",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
