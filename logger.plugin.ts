@@ -27,7 +27,7 @@ interface LoggerOptions {
   ) => string
 }
 
-class Logger {
+export class Logger {
   private fileWriteQueue = new Set<Promise<void>>()
 
   constructor(private options: LoggerOptions) {}
@@ -41,24 +41,18 @@ class Logger {
 
     const formattedMessage = message || '' // Use message directly or empty string
 
-    this.logToConsole(
-      level,
-      formattedMessage,
-      ctx || {
-        request: new Request('http://localhost'),
-        responseTime: 0,
-        status: 200,
-      }
-    )
+    this.logToConsole(level, formattedMessage, ctx)
 
     if (this.options.filePath) {
       const dailyFilePath = this.getDailyFilePath(this.options.filePath)
       // Use the same format as logToConsole for file logging
-      const fileMessage = ctx
-        ? `${new Date().toISOString()} [${ctx.request.method}] ${
-            ctx.request.url
-          } ${ctx.status || 200} ${(ctx.responseTime || 0).toFixed(2)}ms`
-        : formattedMessage
+      const fileMessage = `[${level.toUpperCase()}] ${new Date().toISOString()} ${
+        ctx
+          ? `[${ctx.request.method}] ${ctx.request.url} ${ctx.status || 200} ${(
+              ctx.responseTime || 0
+            ).toFixed(2)}ms`
+          : `${formattedMessage}`
+      }`
       const writePromise = this.logToFile(dailyFilePath, `${fileMessage}\n`)
       this.fileWriteQueue.add(writePromise)
       writePromise.finally(() => this.fileWriteQueue.delete(writePromise))
@@ -78,25 +72,29 @@ class Logger {
   private logToConsole(
     level: LogLevel,
     message: string,
-    {
-      request,
-      responseTime,
-      status,
-    }: { request: Request; responseTime?: number; status?: number }
+    ctx?: { request: Request; responseTime?: number; status?: number }
   ): void {
     const color = COLORS[level]
     const timestamp = new Date().toISOString()
-    const method = request.method
-    const url = request.url
-    const formattedMessage = `${color}[${level.toUpperCase()}]${COLORS.reset} ${
-      COLORS.timestamp
-    }${timestamp}${COLORS.reset} ${COLORS.method}${method}${COLORS.reset} ${
-      COLORS.url
-    }${url}${COLORS.reset} ${COLORS.status}${status}${COLORS.reset} ${
-      COLORS.responseTime
-    }${responseTime?.toFixed(2)}ms${COLORS.reset}${
-      message ? `: ${message}` : ''
-    }`
+    let formattedMessage = ''
+    if (ctx) {
+      const { request, responseTime, status } = ctx
+      const method = request.method
+      const url = request.url
+      formattedMessage = `${color}[${level.toUpperCase()}]${COLORS.reset} ${
+        COLORS.timestamp
+      }${timestamp}${COLORS.reset} ${COLORS.method}${method}${COLORS.reset} ${
+        COLORS.url
+      }${url}${COLORS.reset} ${COLORS.status}${status}${COLORS.reset} ${
+        COLORS.responseTime
+      }${responseTime?.toFixed(2)}ms${COLORS.reset}${
+        message ? `: ${message}` : ''
+      }`
+    } else {
+      formattedMessage = `${color}[${level.toUpperCase()}]${COLORS.reset} ${
+        COLORS.timestamp
+      }${timestamp}${COLORS.reset} ${message}`
+    }
     console.log(formattedMessage)
   }
 
